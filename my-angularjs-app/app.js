@@ -1,57 +1,120 @@
 // angular modülünü tanımladım
 var app = angular.module('myAngularJSApp', []);
 
-//controller'ı tanımladım
-app.controller('MainController', function($http) {
+app.controller('MainController', function ($http, $q, $timeout) {
 
     var vm = this;
-    var apiKey = "aeebbe0f83707b5e504c1a57fb975f51";
-    var apiUrl = "https://api.openweathermap.org/data/2.5/weather";
+    var weatherApiKey = "aeebbe0f83707b5e504c1a57fb975f51";
+    var unsplashApiKey = "Mevp7tZ7IZ7QyUpwhOpkLVenh7kwe4rgWycgLpeRrqM";
 
-    // Başlangıçta gerekli değişkenleri tanımladım
+    var weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather";
+    var unsplashApiUrl = "https://api.unsplash.com/search/photos";
+
     vm.result = null;
     vm.error = null;
     vm.loading = false;
-
-    // Başlangıçta şehir ismini boş olarak ayarladım
     vm.city = '';
+    vm.isReady = false; //başlangıçta uygulama hazır değil
 
-    // Hava durumu verilerini almak için fonksiyon
-    vm.getWeather = function() {
-        // Her yeni istek öncesi eski durumu sıfırla
+    var cityImages = {};
+
+    function initialize() {
+        $http.get('images.json').then(function (response) {
+            cityImages = response.data;
+            vm.isReady = true; // Uygulama verileri yüklendiğinde hazır
+            console.log("Özel resim veritabanı (images.json) başarıyla yüklendi!");
+        }).catch(function (err) {
+            console.error("images.json dosyası yüklenirken bir hata oluştu:", err);
+            vm.error = "Uygulama verileri yüklenemedi. Lütfen sayfayı yenileyin.";
+        });
+    }
+
+    initialize();
+
+    vm.getWeather = function () {
         vm.result = null;
         vm.error = null;
         vm.loading = true;
-        console.log("Hava durumu alınıyor...", vm.city);
 
-        // API isteği yapılıyor
-        $http({
-            method: 'GET',
-            url: apiUrl + '?q=' + vm.city + '&appid=' + apiKey + '&units=metric&lang=tr'
+        $http.get(weatherApiUrl + '?q=' + vm.city + '&appid=' + weatherApiKey + '&units=metric&lang=tr')
+            .then(function (weatherResponse) {
+                var weatherData = weatherResponse.data;
+                var finalWeatherData = {
+                    cityName: weatherData.name,
+                    temp: Math.round(weatherData.main.temp),
+                    humidity: weatherData.main.humidity,
+                    windSpeed: weatherData.wind.speed,
+                    feelsLike: Math.round(weatherData.main.feels_like),
+                    description: weatherData.weather[0].description,
+                    iconUrl: 'https://openweathermap.org/img/wn/' + weatherData.weather[0].icon + '@2x.png'
+                };
 
-        }).then(function successCallback(response) { 
-            // API isteği başarılı olduğunda
-            var apiData = response.data;
-            vm.result = {
-                cityName: apiData.name,
-                temp: Math.round(apiData.main.temp), // Sıcaklık değeri yuvarlanıyor
-                description: apiData.weather[0].description,
-                iconUrl: "https://openweathermap.org/img/wn/" + apiData.weather[0].icon + "@2x.png",
-                humidity: apiData.main.humidity, // Nem oranı
-                windSpeed: apiData.wind.speed, // Rüzgar hızı
-                feelsLike: Math.round(apiData.main.feels_like) // Hissedilen sıcaklık
-            };
+                var cityKey = weatherData.name.toLocaleLowerCase('tr-TR');
+                var weatherCondition = weatherData.weather[0].main;
 
-        }, function errorCallback(response) {
-            // API isteği başarısız olduğunda
-            vm.error = "Şehir bulunamadı veya bir API hatası oluştu. Lütfen tekrar deneyin.";
-            
-        }).finally(function() {
-            // İstek başarılı da olsa, başarısız da olsa bu blok çalışır.
-            // Yükleniyor durumunu sonlandır.
-            vm.loading = false;
 
-        });
-    
+                if (cityImages && cityImages[cityKey]) {
+                    // Bu şehir bizim özel listemizde var!
+                    var cityData = cityImages[cityKey];
+                    var imageUrl = cityData.defaultImage;
+
+                    if (cityData.weatherImages && cityData.weatherImages[weatherCondition]) {
+                        imageUrl = cityData.weatherImages[weatherCondition];
+                    }
+
+                    console.log("Özel veritabanından resim kullanılıyor.");
+
+                    $timeout(function () {
+                        vm.result = {
+                            weatherData: finalWeatherData,
+                            imageData: { imageUrl: imageUrl }
+                        };
+                    });
+
+                    vm.loading = false;
+
+                } else {
+                    // Bu şehir listemizde yok, Unsplash'e soralım.
+                    console.log("Özel veritabanından resim bulunamadı, Unsplash API'si kullanılacak.");
+                    var searchQuery = weatherData.name + ', Turkey ' + weatherCondition;
+
+                    return $http.get(unsplashApiUrl + '?query=' + encodeURIComponent(searchQuery) + '&client_id=' + unsplashApiKey)
+                        .then(function (imageResponse) {
+                            var imageData = imageResponse.data;
+                            var finalImageData = {
+                                imageUrl: imageData.results.length > 0 ? imageData.results[0].urls.regular : null
+                            };
+
+                            $timeout(function () {
+                                vm.result = {
+                                    weatherData: finalWeatherData,
+                                    imageData: finalImageData
+                                };
+                            });
+                        });
+                }
+            })
+            .catch(function (err) {
+                vm.error = "Veriler alınırken bir hata oluştu. Şehir adını kontrol edip tekrar deneyin.";
+            })
+            .finally(function () {
+                if (vm.loading) {
+                    vm.loading = false;
+                }
+            });
     };
+});
+
+app.component('weatherDisplay', {
+    templateUrl: 'weather-display.html',
+    bindings: { weatherInfo: '<' },
+    controller: function () { this.vm = this; },
+    controllerAs: 'vm'
+});
+
+app.component('imageDisplay', {
+    templateUrl: 'image-display.html',
+    bindings: { imageInfo: '<' },
+    controller: function () { this.vm = this; },
+    controllerAs: 'vm'
 });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AngularJS Hava Durumu</title>
+    <title>AngularJS Component App</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -12,63 +12,59 @@
 </head>
 <body>
 
-    <!-- Controller'ımızı bu div'e bağlıyoruz -->
+    <!-- Ana Kontrolcümüz (Parent) tüm bu alanı yönetir -->
     <div class="container" ng-controller="MainController as vm">
-        <h1 class="mb-4">Hava Durumu Uygulaması</h1>
+        <h1 class="mb-4">Hava Durumu ve Şehir Görseli</h1>
 
-        <!-- Arama Formu -->
-        <!-- Formu ng-submit ile submit işlemi yapıyoruz -->
-        <!-- Formun geçerli olup olmadığını kontrol ediyoruz -->
+        <!-- Arama Formu (Bu kısım aynı kalıyor) -->
         <form name="weatherForm" ng-submit="weatherForm.$valid && vm.getWeather()" novalidate>
-        <div class="form-group">
-            <label for="cityInput">Şehir Adı Girin</label>
-            <input type="text" id="cityInput" name ="cityInput" class="form-control" ng-model="vm.city" placeholder="Örn: Istanbul"
-            required>
-        </div>
-        <button type="submit" class="btn btn-primary">Hava Durumunu Getir</button>
+            <div class="form-group">
+                <label for="cityInput">Şehir Adı Girin</label>
+                <input type="text" id="cityInput" name="cityInput" class="form-control" 
+                       ng-model="vm.city" 
+                       placeholder="Örn: İstanbul" 
+                       required>
+            </div>
+            <button type="submit" class="btn btn-primary" ng-disabled="!vm.isReady">
+                {{vm.isReady ? 'Bilgileri Getir ' : 'Yükleniyor...  '}}
+            </button>
+        </form>
 
         <hr>
 
-        <!-- YENİ: Hava durumu verilerini göstereceğimiz alan -->
-        <hr>
-
-        <!-- YENİ: Yükleniyor... mesajını göstereceğimiz alan -->
+        <!-- Yükleniyor ve Hata Mesajları (Bu kısımlar da aynı kalıyor) -->
         <div ng-show="vm.loading" class="alert alert-info">
-            Hava durumu verisi yükleniyor, lütfen bekleyin...
+            Veriler yükleniyor, lütfen bekleyin...
         </div>
-
-        <div ng-show="weatherForm.cityInput.$dirty && weatherForm.cityInput.$error.required" 
-        class="alert alert-danger">
+        <div ng-show="weatherForm.cityInput.$dirty && weatherForm.cityInput.$error.required" class="alert alert-danger">
             Lütfen bir şehir adı giriniz.
         </div>
-
-        <!-- YENİ: Hata mesajını göstereceğimiz alan -->
         <div ng-show="vm.error" class="alert alert-danger">
             {{ vm.error }}
         </div>
 
-        <!-- YENİ: Hava durumu sonuçlarını göstereceğimiz alan -->
-        <!-- Bu bölüm sadece vm.result doluysa ve hata yoksa gösterilecek -->
-        <div ng-show="vm.result && !vm.error" class="card">
-            <div class="card-body">
-                <h3 class="card-title">
-                    {{ vm.result.cityName }} 
-                    <!-- Hava durumu ikonu buraya gelecek -->
-                    <img ng-src="{{ vm.result.iconUrl }}" alt="Hava Durumu İkonu">
-                </h3>
-                <p class="card-text">Sıcaklık: <strong>{{ vm.result.temp }} °C</strong></p>
-                <p class="card-text">Açıklama: <strong>{{ vm.result.description }}</strong></p>
-                <p class="card-text">Nem: <strong>%{{ vm.result.humidity }}</strong></p>
-                <p class="card-text">Rüzgar Hızı: <strong>{{ vm.result.windSpeed }} m/s</strong></p>
-                <p class="card-text">Hissedilen: <strong>{{ vm.result.feelsLike }} °C</strong></p>
+        <!-- ======================================================= -->
+        <!-- İŞTE SİHİR BURADA BAŞLIYOR: ESKİ DİV'LER GİTTİ, COMPONENT'LER GELDİ -->
+        <!-- ======================================================= -->
+        
+        <!-- Bu ana div, sadece sonuçlar başarılı bir şekilde geldiğinde görünür -->
+        <div ng-if="vm.result && !vm.error">
+        
+            <!-- 1. Hava Durumu Component'ini Çağırıyoruz -->
+            <!-- Parent'taki 'vm.result.weatherData'yı, component'in 'weather-info'suna bağlıyoruz. -->
+            <weather-display weather-info="vm.result.weatherData"></weather-display>
+            
+            <!-- 2. Resim Component'ini Çağırıyoruz -->
+            <!-- Parent'taki 'vm.result.imageData'yı, component'in 'image-info'suna bağlıyoruz. -->
+            <image-display image-info="vm.result.imageData"></image-display>
 
-            </div>
         </div>
-    </div>
 
-    <!-- AngularJS Script -->
+    </div> <!-- container sonu -->
+
+    <!-- Script dosyaları (Bu kısım aynı kalıyor) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <!-- Bizim App Script'imiz -->
     <script src="app.js"></script>
+    <!-- Component şablonları için ayrı script dosyaları GEREKMEZ, AngularJS bunları otomatik bulur -->
 </body>
 </html>

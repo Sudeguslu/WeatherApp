@@ -1,0 +1,18 @@
+<!-- Bu, weather-display.html dosyasının içeriğidir. -->
+
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">
+            <!-- Component'e 'bindings' ile gelen 'weatherInfo'yu kullanıyoruz. -->
+            {{ vm.weatherInfo.city }} 
+            <img ng-src="{{ vm.weatherInfo.iconUrl }}" alt="Hava Durumu İkonu">
+        </h3>
+        <p class="card-text">Sıcaklık: <strong>{{ vm.weatherInfo.temp }} °C</strong></p>
+        <p class="card-text">Açıklama: <strong>{{ vm.weatherInfo.description }}</strong></p>
+        <p class="card-text">Nem: <strong>%{{ vm.weatherInfo.humidity }}</strong></p>
+        <p class="card-text">Rüzgar Hızı: <strong>{{ vm.weatherInfo.windSpeed }} m/s</strong></p>
+        <p class="card-text">Hissedilen: <strong>{{ vm.weatherInfo.feelsLike }} °C</strong></p>
+
+        
+    </div>
+</div>

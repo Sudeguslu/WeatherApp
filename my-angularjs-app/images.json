@@ -1,0 +1,31 @@
+
+{
+    "istanbul": {
+        "iconicName": "İstanbul",
+        "weatherImages": {
+            "Clear": "https://images.unsplash.com/photo-1636967250253-54507258a083?w=600",
+            "Clouds": "https://images.unsplash.com/photo-1695045038753-5cbb2d48f724?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "defaultImage": "https://images.unsplash.com/photo-1636967250253-54507258a083?w=600"
+    },
+    "ankara": {
+        "iconicName": "Ankara",
+        "weatherImages": {
+            "Clear": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Ataturk%27s_Mausoleum_%286225341313%29.jpg",
+            "Clouds": "https://galeri.netfotograf.com/images/medium/39AAC8B939A9E928.jpg"
+        },
+        "defaultImage": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Ataturk%27s_Mausoleum_%286225341313%29.jpg"
+    },
+    "izmir": {
+        "iconicName": "İzmir",
+        "weatherImages": {
+            "Clear": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%C4%B0zmir_Clock_Tower%2C_December_2018.jpg/800px-%C4%B0zmir_Clock_Tower%2C_December_2018.jpg",
+            "Clouds": "https://galeri.netfotograf.com/images/medium/18D630A3183541A0.JPG"
+        },
+        "defaultImage": "https://images.unsplash.com/photo-1589991204124-733d34a4a155?w=600"
+    },
+    "batman": {
+        "iconicName": "Batman",
+        "defaultImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Hasankeyf_Castle.jpg/1280px-Hasankeyf_Castle.jpg"
+    }
+}
