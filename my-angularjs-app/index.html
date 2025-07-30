@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr" ng-app="myAngularJSApp">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,32 +8,33 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body { padding: 20px; }
+        body {
+            padding: 20px;
+        }
     </style>
 </head>
+
 <body>
 
     <!-- Ana Kontrolcümüz (Parent) tüm bu alanı yönetir -->
     <div class="container" ng-controller="MainController as vm">
         <h1 class="mb-4">Hava Durumu ve Şehir Görseli</h1>
 
-        <!-- Arama Formu (Bu kısım aynı kalıyor) -->
+        <!-- Arama Formu-->
         <form name="weatherForm" ng-submit="weatherForm.$valid && vm.getWeather()" novalidate>
             <div class="form-group">
                 <label for="cityInput">Şehir Adı Girin</label>
-                <input type="text" id="cityInput" name="cityInput" class="form-control" 
-                       ng-model="vm.city" 
-                       placeholder="Örn: İstanbul" 
-                       required>
+                <input type="text" id="cityInput" name="cityInput" class="form-control" ng-model="vm.city"
+                    placeholder="Örn: İstanbul" required>
             </div>
             <button type="submit" class="btn btn-primary" ng-disabled="!vm.isReady">
-                {{vm.isReady ? 'Bilgileri Getir ' : 'Yükleniyor...  '}}
+                {{vm.isReady ? 'Bilgileri Getir ' : 'Yükleniyor... '}}
             </button>
         </form>
 
         <hr>
 
-        <!-- Yükleniyor ve Hata Mesajları (Bu kısımlar da aynı kalıyor) -->
+        <!-- Yükleniyor ve Hata Mesajları -->
         <div ng-show="vm.loading" class="alert alert-info">
             Veriler yükleniyor, lütfen bekleyin...
         </div>
@@ -43,28 +45,24 @@
             {{ vm.error }}
         </div>
 
-        <!-- ======================================================= -->
-        <!-- İŞTE SİHİR BURADA BAŞLIYOR: ESKİ DİV'LER GİTTİ, COMPONENT'LER GELDİ -->
-        <!-- ======================================================= -->
-        
+
         <!-- Bu ana div, sadece sonuçlar başarılı bir şekilde geldiğinde görünür -->
         <div ng-if="vm.result && !vm.error">
-        
-            <!-- 1. Hava Durumu Component'ini Çağırıyoruz -->
-            <!-- Parent'taki 'vm.result.weatherData'yı, component'in 'weather-info'suna bağlıyoruz. -->
+
             <weather-display weather-info="vm.result.weatherData"></weather-display>
-            
-            <!-- 2. Resim Component'ini Çağırıyoruz -->
-            <!-- Parent'taki 'vm.result.imageData'yı, component'in 'image-info'suna bağlıyoruz. -->
             <image-display image-info="vm.result.imageData"></image-display>
+            <chart-display weather-info="vm.result.weatherData"></chart-display>
 
         </div>
 
-    </div> <!-- container sonu -->
+    </div>
 
-    <!-- Script dosyaları (Bu kısım aynı kalıyor) -->
+    <!-- Script dosyaları -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="app.js"></script>
-    <!-- Component şablonları için ayrı script dosyaları GEREKMEZ, AngularJS bunları otomatik bulur -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+     <script src="app.js"></script>
 </body>
+
 </html>

@@ -1,4 +1,3 @@
-
 {
     "istanbul": {
         "iconicName": "İstanbul",
@@ -27,5 +26,13 @@
     "batman": {
         "iconicName": "Batman",
         "defaultImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Hasankeyf_Castle.jpg/1280px-Hasankeyf_Castle.jpg"
+    },
+    "antalya": {
+        "iconicName": "Antalya",
+        "weatherImages": {
+            "Clear": "https://images.unsplash.com/photo-1683743035916-b7d8a5f70c5f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Clouds": "https://images.unsplash.com/photo-1662373432715-34614cc15897?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
+        "defaultImage": "https://images.unsplash.com/photo-1690982172254-625cfc33b747?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
 }
