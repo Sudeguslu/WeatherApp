@@ -34,5 +34,24 @@
             "Clouds": "https://images.unsplash.com/photo-1662373432715-34614cc15897?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
         "defaultImage": "https://images.unsplash.com/photo-1690982172254-625cfc33b747?q=80&w=1025&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    }
+    },
+
+    "kayseri": {
+        "iconicName": "Kayseri",
+        "weatherImages": {
+            "Clear": "https://upload.wikimedia.org/wikipedia/commons/4/4a/2013_-_panoramio_%28200%29.jpg",
+            "Clouds": "https://www.kayseri.bel.tr/uploads/kesfet/sultan-sazligi-5.jpg"
+        },
+        "defaultImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Wild_horses1.jpg/1920px-Wild_horses1.jpg"
+},
+"nevşehir": {
+        "iconicName": "Nevşehir",
+        "weatherImages": {
+            "Clear": "https://images.unsplash.com/photo-1567607383717-7b62aec5e875?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "Clouds": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Kaya%C5%9Fehir1.jpg"
+        },
+        "defaultImage": "https://upload.wikimedia.org/wikipedia/commons/3/3c/NevsehirKalesi.jpg"
+}
+
+
 }

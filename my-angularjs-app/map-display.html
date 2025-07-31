@@ -1,0 +1,8 @@
+<!-- map-display.html dosyasının içeriği -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ vm.weatherInfo.cityName }} Konumu</h5>
+        <!-- Bu özel 'leaflet' etiketi, angular-leaflet-directive tarafından sağlanır -->
+        <leaflet lf-center="vm.center" markers="vm.markers" defaults="vm.defaults" height="400px" width="100%"></leaflet>
+    </div>
+</div>

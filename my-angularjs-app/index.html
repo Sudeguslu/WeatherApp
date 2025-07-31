@@ -7,11 +7,40 @@
     <title>AngularJS Component App</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             padding: 20px;
         }
+
+        .suggestion-card {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .suggestion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-img-top-container {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .location-preview {
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .location-preview:hover {
+            background-color: #e2e6ea !important;
+            /* Bootstrap'in rengini ezmek için */
+        }
     </style>
+
 </head>
 
 <body>
@@ -19,6 +48,14 @@
     <!-- Ana Kontrolcümüz (Parent) tüm bu alanı yönetir -->
     <div class="container" ng-controller="MainController as vm">
         <h1 class="mb-4">Hava Durumu ve Şehir Görseli</h1>
+        <div class="location-preview alert alert-light" ng-if="vm.locationPreview"
+            ng-click="vm.displayCity(vm.locationPreview)" title="Detayları görmek için tıklayın">
+
+            <i class="fas fa-map-marker-alt"></i> <!-- İkon -->
+            <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>, {{ vm.locationPreview.weatherData.temp }}°C
+
+        </div>
+
 
         <!-- Arama Formu-->
         <form name="weatherForm" ng-submit="weatherForm.$valid && vm.getWeather()" novalidate>
@@ -31,6 +68,37 @@
                 {{vm.isReady ? 'Bilgileri Getir ' : 'Yükleniyor... '}}
             </button>
         </form>
+
+        <div ng-if="vm.loadingPopular" class="text-center mt-4">
+            <p>Öneriler yükleniyor...</p>
+        </div>
+
+        <!-- Ana 'row' div'i, popüler şehirler varsa görünür -->
+        <div class="row mt-4" ng-if="!vm.loadingPopular && vm.popularCities.length > 0">
+            <div class="col-12">
+                <h4>Önerilen Şehirler</h4>
+            </div>
+
+            <!-- ng-repeat ile popüler şehirler dizisindeki her bir şehir için bir kart oluştur -->
+            <div class="col-md-4 mb-3" ng-repeat="cityData in vm.popularCities">
+                <!-- Karta tıklandığında, ana sonuç bölümünü bu kartın verisiyle doldur -->
+                <div class="card suggestion-card" ng-click="vm.displayCity(cityData)">
+
+                    <!-- Resim bulunamazsa varsayılan bir arkaplan göster -->
+                    <div class="card-img-top-container"
+                        ng-style="{'background-image': 'url(' + (cityData.imageData.imageUrl || 'https://via.placeholder.com/400x250?text=Resim+Yok') + ')'}">
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ cityData.weatherData.cityName }}</h5>
+                        <p class="card-text">
+                            <i class="fas fa-thermometer-half"></i> <!-- Font Awesome ikonu (opsiyonel) -->
+                            {{ cityData.weatherData.temp }}°C, {{ cityData.weatherData.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <hr>
 
@@ -45,13 +113,13 @@
             {{ vm.error }}
         </div>
 
-
         <!-- Bu ana div, sadece sonuçlar başarılı bir şekilde geldiğinde görünür -->
         <div ng-if="vm.result && !vm.error">
 
             <weather-display weather-info="vm.result.weatherData"></weather-display>
             <image-display image-info="vm.result.imageData"></image-display>
             <chart-display weather-info="vm.result.weatherData"></chart-display>
+            <map-display weather-info="vm.result.weatherData"></map-display>
 
         </div>
 
@@ -59,10 +127,12 @@
 
     <!-- Script dosyaları -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
-     <script src="app.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/angular-leaflet-directive@0.10.0/dist/angular-leaflet-directive.min.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
