@@ -52,7 +52,7 @@
             ng-click="vm.displayCity(vm.locationPreview)" title="Detayları görmek için tıklayın">
 
             <i class="fas fa-map-marker-alt"></i> <!-- İkon -->
-            <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>, {{ vm.locationPreview.weatherData.temp }}°C
+            <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>, {{ vm.locationPreview.weatherData.temp.c }}°C / {{ vm.locationPreview.weatherData.temp.f }}°F
 
         </div>
 
@@ -92,8 +92,9 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ cityData.weatherData.cityName }}</h5>
                         <p class="card-text">
-                            <i class="fas fa-thermometer-half"></i> <!-- Font Awesome ikonu (opsiyonel) -->
-                            {{ cityData.weatherData.temp }}°C, {{ cityData.weatherData.description }}
+                            <i class="fas fa-thermometer-half"></i>
+                            {{ cityData.weatherData.temp.c }}°C / {{ cityData.weatherData.temp.f }}°F, {{
+                            cityData.weatherData.description }}
                         </p>
                     </div>
                 </div>

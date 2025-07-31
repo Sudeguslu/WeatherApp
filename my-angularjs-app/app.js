@@ -17,12 +17,22 @@ app.factory('WeatherService', function ($http, $q) {
 
     function processWeatherData(weatherResponse) {
         var weatherData = weatherResponse.data;
+        var tempC = Math.round(weatherData.main.temp);
+        var tempF = Math.round((tempC * 9 / 5) + 32);
+        var feelsLikeC = Math.round(weatherData.main.feels_like);
+        var feelsLikeF = Math.round((feelsLikeC * 9 / 5) + 32);
         var finalWeatherData = {
             cityName: weatherData.name,
-            temp: Math.round(weatherData.main.temp),
+            temp: {
+                c: tempC,
+                f: tempF
+            },
+            feelsLike: {
+                c: feelsLikeC,
+                f: feelsLikeF
+            },
             humidity: weatherData.main.humidity,
             windSpeed: weatherData.wind.speed,
-            feelsLike: Math.round(weatherData.main.feels_like),
             description: weatherData.weather[0].description,
             coord: weatherData.coord,
             iconUrl: 'https://openweathermap.org/img/wn/' + weatherData.weather[0].icon + '@2x.png'
@@ -177,6 +187,8 @@ app.controller('MainController', function ($q, $timeout, WeatherService) {
                 .then(function (data) {
                     var apiCityName = data.weatherData.cityName.toLocaleLowerCase('tr-TR');
                     var matchedCityKey = Object.keys(cityImages).find(key => apiCityName.includes(key) || key.includes(apiCityName));
+                    var cityTempC = data.weatherData.temp.c;
+                    var cityTempF = data.weatherData.temp.f;
 
                     if (matchedCityKey) {
                         data.weatherData.cityName = cityImages[matchedCityKey].iconicName;
@@ -271,11 +283,13 @@ app.component('chartDisplay', {
             if (changes.weatherInfo && changes.weatherInfo.currentValue) {
                 var data = changes.weatherInfo.currentValue;
 
-                vm.labels = ['Sıcaklık (°C)', 'Hissedilen (°C)', 'Nem (%)', 'Rüzgar (m/s)'];
+                vm.labels = ['Sıcaklık (°C)', 'Sıcaklık (°F)', 'Hissedilen (°C)', 'Hissedilen (°F)', 'Nem (%)', 'Rüzgar (m/s)'];
                 vm.data =
                     [
-                        data.temp,
-                        data.feelsLike,
+                        data.temp.c,
+                        data.temp.f,
+                        data.feelsLike.c,
+                        data.feelsLike.f,
                         data.humidity,
                         data.windSpeed
                     ];
