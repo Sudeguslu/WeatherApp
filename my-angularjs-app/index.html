@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body {
             padding: 20px;
@@ -41,6 +42,7 @@
         }
     </style>
 
+
 </head>
 
 <body>
@@ -48,11 +50,14 @@
     <!-- Ana Kontrolcümüz (Parent) tüm bu alanı yönetir -->
     <div class="container" ng-controller="MainController as vm">
         <h1 class="mb-4">Hava Durumu ve Şehir Görseli</h1>
+
+        <!-- DÜZENLEME: Bu bölümün adı locationPreview'dan vm.userLocationWeather'a değiştirildiğinde daha anlamlı olabilir, şimdilik aynı bırakıldı -->
         <div class="location-preview alert alert-light" ng-if="vm.locationPreview"
             ng-click="vm.displayCity(vm.locationPreview)" title="Detayları görmek için tıklayın">
 
             <i class="fas fa-map-marker-alt"></i> <!-- İkon -->
-            <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>, {{ vm.locationPreview.weatherData.temp.c }}°C / {{ vm.locationPreview.weatherData.temp.f }}°F
+            <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>, {{ vm.locationPreview.weatherData.temp.c
+            }}°C / {{ vm.locationPreview.weatherData.temp.f }}°F
 
         </div>
 
@@ -126,14 +131,33 @@
 
     </div>
 
-    <!-- Script dosyaları -->
+    <!-- ===== KÜTÜPHANE SCRIPTLERİ ===== -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script
         src="https://cdn.jsdelivr.net/npm/angular-leaflet-directive@0.10.0/dist/angular-leaflet-directive.min.js"></script>
-    <script src="app.js"></script>
+
+
+    <!-- ===== UYGULAMA SCRIPTLERİ (YENİ, DÜZENLİ YAPI) ===== -->
+    <!-- Önemli Not: Çağırma sırası kritiktir! -->
+
+    <!-- 1. Ana Uygulama Modülü Tanımı -->
+    <script src="app/app.js"></script>
+
+    <!-- 2. Servisler (Modüle hizmet edenler) -->
+    <script src="app/services/WeatherService.js"></script>
+
+    <!-- 3. Ana Kontrolcü (Uygulamanın ana mantığı) -->
+    <script src="app/MainController.js"></script>
+
+    <!-- 4. Component'ler (Tekrar kullanılabilir parçalar) -->
+    <script src="app/components/weatherDisplay/weatherDisplay.component.js"></script>
+    <script src="app/components/imageDisplay/imageDisplay.component.js"></script>
+    <script src="app/components/chartDisplay/chartDisplay.component.js"></script>
+    <script src="app/components/mapDisplay/mapDisplay.component.js"></script>
+
 </body>
 
 </html>
