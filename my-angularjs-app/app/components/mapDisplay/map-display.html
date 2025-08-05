@@ -1,8 +1,27 @@
-<!-- map-display.html dosyasının içeriği -->
-<div class="card map-card">
-    <div class="card-body">
-        <h5 class="card-title">{{ vm.weatherInfo.cityName }} Konumu</h5>
-        <!-- Bu özel 'leaflet' etiketi, angular-leaflet-directive tarafından sağlanır -->
-        <leaflet lf-center="vm.center" markers="vm.markers" defaults="vm.defaults" height="400px" width="100%"></leaflet>
+<!-- map-display.html dosyasının güncellenmiş hali -->
+
+<div class="card map-card" style=" height: calc(65vh - 120px);" ng-if="vm.weatherInfo" ng-cloak>
+
+    <div class="card-body" style="padding: 0; height: 70%; display: flex; flex-direction: column;">
+
+        <h5 class="card-title" style="padding: 10px; margin: 0;">{{ vm.weatherInfo.cityName }} Konumu</h5>
+
+        <div style="flex-grow: 1; position: relative;">
+
+            <leaflet 
+
+                lf-center="vm.center" 
+
+                markers="vm.markers" 
+
+                defaults="vm.defaults" 
+
+                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"
+
+            ></leaflet>
+
+        </div>
+
     </div>
+
 </div>

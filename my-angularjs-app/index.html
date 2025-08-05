@@ -9,126 +9,717 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        :root {
+            --primary-navy: #023047;
+            --primary-orange: #FB8500;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            padding: 20px;
+            background-color: var(--light-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--primary-navy);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--primary-navy);
+            padding: 12px 0;
+            box-shadow: 0 20px 10px rgba(2, 48, 71, 0.2);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-right: 30px;
+        }
+
+        .navbar-location {
+            color: var(--primary-orange);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: rgba(251, 133, 0, 0.1);
+        }
+
+        .navbar-location:hover {
+            background: rgba(251, 133, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .navbar-location i {
+            margin-right: 8px;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-input-group {
+            position: relative;
+        }
+
+        .search-input {
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            padding: 12px 50px 12px 20px;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(225, 178, 124, 0.918);
+            outline: none;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary-orange);
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: rgb(84, 182, 248);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover:not(:disabled) {
+            background: #da9240;
+            transform: scale(1.05);
+        }
+
+        .search-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Popular Cities Section */
+        .popular-cities-section {
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .section-title {
+            color: var(--primary-navy);
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            display: inline-block;
+            border-left: 4px solid var(--primary-orange);
+            padding-left: 15px;
+        }
+
+        .popular-cities-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .suggestion-card {
             cursor: pointer;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: white;
+            width: 280px;
+            height: 100%;
         }
 
         .suggestion-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-orange);
         }
 
         .card-img-top-container {
-            height: 200px;
+            height: 180px;
             background-size: cover;
             background-position: center;
+            position: relative;
         }
 
-        .location-preview {
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
+        .card-img-top-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(2, 48, 71, 0.3) 100%);
         }
 
-        .location-preview:hover {
-            background-color: #e2e6ea !important;
-            /* Bootstrap'in rengini ezmek için */
+        .card-body {
+            padding: 20px;
         }
+
+        .card-title {
+            color: var(--primary-navy);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .card-text i {
+            color: var(--primary-orange);
+            margin-right: 5px;
+        }
+
+        /* Results Section */
+        .results-section {
+            padding: 30px 0;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .result-card-header {
+            background: var(--primary-navy);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .result-card-body {
+            padding: 20px;
+            height: calc(100% - 60px);
+        }
+
+        /* Photo Section */
+        .photo-card {
+            height: 350px;
+        }
+
+        .photo-card .result-card-body {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(2, 48, 71, 0.8));
+            color: white;
+            padding: 20px;
+        }
+
+        /* Weather Info */
+        .weather-info-card {
+            height: 350px;
+        }
+
+        /* Chart and Map */
+        .chart-card, .map-card {
+            height: 350px;
+        }
+
+        .map-card .result-card-body {
+            padding: 0;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-navy);
+            color: white;
+            padding: 40px 0 20px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            color: var(--primary-orange);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .footer-text {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary-orange);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        /* Alerts */
+        .alert-info {
+            background: var(--primary-navy);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            font-weight: 500;
+        }
+
+        .alert-danger {
+            background: #dc3545;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            font-weight: 500;
+        }
+
+        /* Loading */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+                margin-right: 15px;
+            }
+            
+            .search-section {
+                padding: 15px 0;
+            }
+            
+            .search-input {
+                font-size: 14px;
+                padding: 10px 45px 10px 15px;
+            }
+            
+            .card-img-top-container {
+                height: 150px;
+            }
+            
+            .popular-cities-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .suggestion-card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .photo-card,
+            .weather-info-card,
+            .chart-card,
+            .map-card {
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-section {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-location {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+        .dashboard-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.dashboard-left, .dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Büyük ekranlarda grafik ve hava durumu yan yana */
+@media (min-width: 992px) {
+    .dashboard-left {
+        flex-direction: row;
+    }
+
+    .dashboard-left .result-card {
+        flex: 1;
+    }
+     html, body {
+            height: 100%;
+        }
+
+        .page-container {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrap {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+            /* Footer'ın diğer stilleri zaten yukarıda tanımlı olduğu için
+               buraya eklemeye gerek yok. */
+        }
+}
     </style>
-
-
 </head>
 
 <body>
+    <div class="page-container" ng-controller="MainController as vm">
+        <div class="content-wrap">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="main-container">
+                <div class="d-flex align-items-center w-100">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="fas fa-cloud-sun" style="margin-right: 10px;" ></i> CloudTech
+                        
+                    </a>
+                <div class="navbar-location" ng-if="vm.locationPreview" ng-click="vm.displayCity(vm.locationPreview)">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>
+                        {{ vm.locationPreview.weatherData.temp.c }}°C
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-    <!-- Ana Kontrolcümüz (Parent) tüm bu alanı yönetir -->
-    <div class="container" ng-controller="MainController as vm">
-        <h1 class="mb-4">Hava Durumu ve Şehir Görseli</h1>
-
-        <!-- DÜZENLEME: Bu bölümün adı locationPreview'dan vm.userLocationWeather'a değiştirildiğinde daha anlamlı olabilir, şimdilik aynı bırakıldı -->
-        <div class="location-preview alert alert-light" ng-if="vm.locationPreview"
-            ng-click="vm.displayCity(vm.locationPreview)" title="Detayları görmek için tıklayın">
-
-            <i class="fas fa-map-marker-alt"></i> <!-- İkon -->
-            <strong>{{ vm.locationPreview.weatherData.cityName }}</strong>, {{ vm.locationPreview.weatherData.temp.c
-            }}°C / {{ vm.locationPreview.weatherData.temp.f }}°F
-
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="main-container">
+                <form name="weatherForm" ng-submit="weatherForm.$valid && vm.getWeather()" novalidate class="search-form">
+                    <div class="search-input-group">
+                        <input type="text" name="cityInput" class="search-input" ng-model="vm.city"
+                            placeholder="Arama" required>
+                        <button type="submit" class="search-btn" ng-disabled="!vm.isReady">
+                            <i class="fas fa-{{vm.isReady ? 'search' : 'spinner fa-spin'}}"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-
-        <!-- Arama Formu-->
-        <form name="weatherForm" ng-submit="weatherForm.$valid && vm.getWeather()" novalidate>
-            <div class="form-group">
-                <label for="cityInput">Şehir Adı Girin</label>
-                <input type="text" id="cityInput" name="cityInput" class="form-control" ng-model="vm.city"
-                    placeholder="Örn: İstanbul" required>
-            </div>
-            <button type="submit" class="btn btn-primary" ng-disabled="!vm.isReady">
-                {{vm.isReady ? 'Bilgileri Getir ' : 'Yükleniyor... '}}
-            </button>
-        </form>
-
-        <div ng-if="vm.loadingPopular" class="text-center mt-4">
-            <p>Öneriler yükleniyor...</p>
-        </div>
-
-        <!-- Ana 'row' div'i, popüler şehirler varsa görünür -->
-        <div class="row mt-4" ng-if="!vm.loadingPopular && vm.popularCities.length > 0">
-            <div class="col-12">
-                <h4>Önerilen Şehirler</h4>
+        <div class="main-container">
+            <!-- Loading Popular Cities -->
+            <div ng-if="vm.loadingPopular" class="text-center mt-4">
+                <div class="alert alert-info">
+                    <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+                    Öneriler yükleniyor...
+                </div>
             </div>
 
-            <!-- ng-repeat ile popüler şehirler dizisindeki her bir şehir için bir kart oluştur -->
-            <div class="col-md-4 mb-3" ng-repeat="cityData in vm.popularCities">
-                <!-- Karta tıklandığında, ana sonuç bölümünü bu kartın verisiyle doldur -->
-                <div class="card suggestion-card" ng-click="vm.displayCity(cityData)">
+            <!-- Popular Cities Section -->
+            <div class="popular-cities-section" ng-if="!vm.loadingPopular && vm.popularCities.length > 0">
+                <h4 class="section">
+                    Önerilen Şehirler
+                </h4>
+                
+                <div class="popular-cities-container">
+                    <div ng-repeat="cityData in vm.popularCities">
+                        <div class="card suggestion-card" ng-click="vm.displayCity(cityData)">
+                            <div class="card-img-top-container"
+                                ng-style="{'background-image': 'url(' + (cityData.imageData.imageUrl || 'https://via.placeholder.com/400x250?text=Resim+Yok') + ')'}">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ cityData.weatherData.cityName }}</h5>
+                                <p class="card-text">
+                                    <i class="fas fa-thermometer-half"></i>
+                                    {{ cityData.weatherData.temp.c }}°C / {{ cityData.weatherData.temp.f }}°F
+                                    <br>{{ cityData.weatherData.description }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <!-- Resim bulunamazsa varsayılan bir arkaplan göster -->
-                    <div class="card-img-top-container"
-                        ng-style="{'background-image': 'url(' + (cityData.imageData.imageUrl || 'https://via.placeholder.com/400x250?text=Resim+Yok') + ')'}">
+            <!-- Error and Loading Messages -->
+            <div ng-show="vm.loading" class="alert alert-info">
+                <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+                Veriler yükleniyor, lütfen bekleyin...
+            </div>
+            <div ng-show="weatherForm.cityInput.$dirty && weatherForm.cityInput.$error.required" class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i>
+                Lütfen bir şehir adı giriniz.
+            </div>
+            <div ng-show="vm.error" class="alert alert-danger">
+                <i class="fas fa-exclamation-circle" style="margin-right: 10px;"></i>
+                {{ vm.error }}
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" ng-if="vm.result && !vm.error">
+                <div class="row">
+                    <!-- Sol Column: Hava Durumu ve Grafik -->
+                    <div class="col-lg-6 col-md-12">
+                        <!-- Hava Durumu -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="result-card weather-info-card" style= "display: flex; flex-direction: column; height: 100%;">
+                                    <div class="result-card-header">
+                                        <i class="bi bi-thermometer-sun" style="margin-right: 8px;"></i>
+                                        Hava Durumu
+                                    </div>
+                                    <div class="result-card-body" style=" flex-grow: 1;">
+                                        <weather-display weather-info="vm.result.weatherData"></weather-display>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Grafik -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="result-card chart-card" style= "display: flex; flex-direction: column; height: 100%;">
+                                    <div class="result-card-header">
+                                        <i class="bi bi-bar-chart-line-fill" style="margin-right: 8px;"></i>
+                                        Grafik
+                                    </div>
+                                    <div class="result-card-body">
+                                        <chart-display weather-info="vm.result.weatherData"></chart-display>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="card-body">
-                        <h5 class="card-title">{{ cityData.weatherData.cityName }}</h5>
-                        <p class="card-text">
-                            <i class="fas fa-thermometer-half"></i>
-                            {{ cityData.weatherData.temp.c }}°C / {{ cityData.weatherData.temp.f }}°F, {{
-                            cityData.weatherData.description }}
-                        </p>
+                    <!-- Sağ Column: Fotoğraf ve Harita -->
+                    <div class="col-lg-6 col-md-12">
+                        <!-- Fotoğraf -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="result-card photo-card">
+                                    <div class="result-card-header">
+                                        <i class="bi bi-camera" style="margin-right: 8px;"></i>
+                                        Şehir Görseli
+                                    </div>
+                                    <div class="result-card-body" ng-style="{'background-image': 'url(' + (vm.result.imageData.imageUrl || 'https://via.placeholder.com/800x400?text=Resim+Yok') + ')'}">
+                                        <div class="photo-overlay">
+                                            <h4 style="margin: 0; font-weight: 700;">{{ vm.result.weatherData.cityName }}</h4>
+                                            <p style="margin: 5px 0 0 0; opacity: 0.9;">{{ vm.result.imageData.description}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Harita -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="result-card map-card" style= "display: flex; flex-direction: column; height: 100%;">
+                                    <div class="result-card-header">
+                                        <i class="bi bi-geo-alt-fill" style="margin-right: 8px;"></i>
+                                        Konum
+                                    </div>
+                                    <div class="result-card-body">
+                                        <map-display weather-info="vm.result.weatherData"></map-display>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+</div>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="main-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3 class="footer-title">
+                            <i class="fas fa-cloud-sun" style="margin-right: 10px;"></i>
+                            CloudTech
+                        </h3>
+                        <p class="footer-text">
+                            En güncel hava durumu bilgilerini ve detaylı meteoroloji verilerini size sunar. 
+                            Güvenilir kaynaklardan aldığımız verilerle, günlük planlarınızı daha iyi yapabilirsiniz.
+                        </p>
+                        <div class="social-icons">
+                            <a href="#" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" title="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
 
-        <hr>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Hizmetlerimiz</h4>
+                        <ul class="footer-links">
+                            <li><a href="#">Günlük Hava Durumu</a></li>
+                            <li><a href="#">7 Günlük Tahmin</a></li>
+                            <li><a href="#">Saatlik Veriler</a></li>
+                            <li><a href="#">Harita Görünümü</a></li>
+                            <li><a href="#">Hava Durumu Grafikleri</a></li>
+                        </ul>
+                    </div>
 
-        <!-- Yükleniyor ve Hata Mesajları -->
-        <div ng-show="vm.loading" class="alert alert-info">
-            Veriler yükleniyor, lütfen bekleyin...
-        </div>
-        <div ng-show="weatherForm.cityInput.$dirty && weatherForm.cityInput.$error.required" class="alert alert-danger">
-            Lütfen bir şehir adı giriniz.
-        </div>
-        <div ng-show="vm.error" class="alert alert-danger">
-            {{ vm.error }}
-        </div>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Şirket</h4>
+                        <ul class="footer-links">
+                            <li><a href="#">Hakkımızda</a></li>
+                            <li><a href="#">İletişim</a></li>
+                            <li><a href="#">Gizlilik Politikası</a></li>
+                            <li><a href="#">Kullanım Şartları</a></li>
+                            <li><a href="#">API Dokümantasyonu</a></li>
+                        </ul>
+                    </div>
 
-        <!-- Bu ana div, sadece sonuçlar başarılı bir şekilde geldiğinde görünür -->
-        <div ng-if="vm.result && !vm.error">
+                    <div class="footer-section">
+                        <h4 class="footer-title">İletişim</h4>
+                        <div class="footer-text">
+                            <p><i class="fas fa-envelope" style="margin-right: 10px; color: var(--primary-orange);"></i> info@cloudtech.com</p>
+                            <p><i class="fas fa-phone" style="margin-right: 10px; color: var(--primary-orange);"></i> +90 212 555 0123</p>
+                            <p><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--primary-orange);"></i> İstanbul, Türkiye</p>
+                        </div>
+                    </div>
+                </div>
 
-            <weather-display weather-info="vm.result.weatherData"></weather-display>
-            <image-display image-info="vm.result.imageData"></image-display>
-            <chart-display weather-info="vm.result.weatherData"></chart-display>
-            <map-display weather-info="vm.result.weatherData"></map-display>
-
-        </div>
-
+                <div class="footer-bottom">
+                    <p>&copy; 2025 CloudTech. Tüm hakları saklıdır. | Hava durumu verileri güvenilir kaynaklardan sağlanmaktadır.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <!-- ===== KÜTÜPHANE SCRIPTLERİ ===== -->
@@ -139,14 +730,13 @@
     <script
         src="https://cdn.jsdelivr.net/npm/angular-leaflet-directive@0.10.0/dist/angular-leaflet-directive.min.js"></script>
 
-
     <!-- ===== UYGULAMA SCRIPTLERİ (YENİ, DÜZENLİ YAPI) ===== -->
     <!-- Önemli Not: Çağırma sırası kritiktir! -->
 
     <!-- 1. Ana Uygulama Modülü Tanımı -->
     <script src="app/app.js"></script>
 
-    <!-- 2. Servisler (Modüle hizmet edenler) -->
+    <!-- 2. Servisler (Modüle hizmet edenlar) -->
     <script src="app/services/WeatherService.js"></script>
 
     <!-- 3. Ana Kontrolcü (Uygulamanın ana mantığı) -->
@@ -157,7 +747,6 @@
     <script src="app/components/imageDisplay/imageDisplay.component.js"></script>
     <script src="app/components/chartDisplay/chartDisplay.component.js"></script>
     <script src="app/components/mapDisplay/mapDisplay.component.js"></script>
-
 </body>
 
 </html>

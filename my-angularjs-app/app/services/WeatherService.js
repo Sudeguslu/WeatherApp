@@ -42,8 +42,7 @@ app.factory('WeatherService', function ($http, $q) {
             if (cityData.weatherImages && cityData.weatherImages[weatherCondition]) {
                 imageUrl = cityData.weatherImages[weatherCondition];
             }
-            console.log("WeatherService: Özel veritabanından resim kullanılıyor.");
-            // Bir promise döndürmek yerine, doğrudan çözülmüş bir promise döndürüyoruz.
+            console.log("WeatherService: Özel veritabanından resim kullanılıyor.")
             return $q.when({ weatherData: finalWeatherData, imageData: { imageUrl: imageUrl } });
         } else {
             console.log("WeatherService: Unsplash API'si kullanılacak.");
@@ -59,13 +58,12 @@ app.factory('WeatherService', function ($http, $q) {
 
     function getWeatherData(city) {
         return $http.get(weatherApiUrl + '?q=' + city + '&appid=' + weatherApiKey + '&units=metric&lang=tr')
-            .then(processWeatherData); // Gelen sonucu doğrudan ortak fonksiyona yönlendir.
+            .then(processWeatherData); 
     }
 
-    // DÜZELTME: Eksik olan getWeatherDataByCoords fonksiyonunu ekledik.
     function getWeatherDataByCoords(lat, lon) {
         return $http.get(weatherApiUrl + '?lat=' + lat + '&lon=' + lon + '&appid=' + weatherApiKey + '&units=metric&lang=tr')
-            .then(processWeatherData); // Gelen sonucu doğrudan ortak fonksiyona yönlendir.
+            .then(processWeatherData); 
     }
 
     function getPopularSearches() {
@@ -86,23 +84,18 @@ app.factory('WeatherService', function ($http, $q) {
         var searches = localStorage.getItem('weatherAppSearches');
         var searchData = searches ? JSON.parse(searches) : [];
 
-        // Gelen şehir adını standart bir formata getir (Baş Harfi Büyük)
         var formattedCityName = cityName.charAt(0).toUpperCase() + cityName.slice(1).toLocaleLowerCase('tr-TR');
 
-        // Şehrin listede olup olmadığını bul
         var cityIndex = searchData.findIndex(function (item) {
             return item.name === formattedCityName;
         });
 
         if (cityIndex > -1) {
-            // Şehir zaten var, sadece sayacını bir artır
             searchData[cityIndex].count++;
         } else {
-            // Şehir yeni, listeye ekle
             searchData.push({ name: formattedCityName, count: 1 });
         }
 
-        // Güncellenmiş listeyi tekrar localStorage'a kaydet
         localStorage.setItem('weatherAppSearches', JSON.stringify(searchData));
     }
 

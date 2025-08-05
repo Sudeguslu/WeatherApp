@@ -7,9 +7,9 @@ app.controller('MainController', function ($q, $timeout, WeatherService) {
     vm.city = '';
     vm.isReady = false;
     vm.recentSearches = [];
-    vm.popularCities = []; //popüler şehirler için yeni bir dizi
-    vm.loadingPopular = false; //popüler şehirler yükleniyor mu kontrolü için
-    vm.locationPreview = null; // Kullanıcının konumunu önizlemek için
+    vm.popularCities = [];
+    vm.loadingPopular = false;
+    vm.locationPreview = null;
     var cityImages = {};
 
 
@@ -50,7 +50,6 @@ app.controller('MainController', function ($q, $timeout, WeatherService) {
         if (!navigator.geolocation) {
             return;
         }
-        //vm.loading = true;
 
         navigator.geolocation.getCurrentPosition(function (position) {
             var lat = position.coords.latitude;
@@ -110,9 +109,7 @@ app.controller('MainController', function ($q, $timeout, WeatherService) {
     };
     vm.displayCity = function (cityData) {
         console.log("Öneri kartına tıklandı:", cityData);
-        // Tıklanan kartın verisini, ana sonuç değişkenine ata.
         vm.result = cityData;
-        // Sayfayı, sonuçların olduğu yere kaydır (daha iyi bir UX için).
         window.scrollTo(0, document.body.scrollHeight);
     };
 

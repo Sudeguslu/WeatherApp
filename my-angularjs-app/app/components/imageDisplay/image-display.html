@@ -1,9 +1,7 @@
 
 
 <div class="card image-card">
-    <!-- Component'e 'bindings' ile gelen 'imageInfo'yu kullanıyoruz. -->
     <img ng-if="vm.imageInfo.imageUrl" ng-src="{{ vm.imageInfo.imageUrl }}" class="img-fluid rounded" alt="Şehir Resmi">
     
-    <!-- Eğer resim bulunamazsa bir mesaj gösterelim -->
     <p ng-if="!vm.imageInfo.imageUrl" class="text-muted">Bu şehir için gösterilecek resim bulunamadı.</p>
 </div>

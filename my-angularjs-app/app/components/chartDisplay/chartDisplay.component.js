@@ -21,7 +21,7 @@ app.component('chartDisplay', {
                         data.windSpeed
                     ];
 
-                vm.colors = ['#4D5360', '#949FB1', '#46BFBD', '#FDB45C'];
+                vm.colors = ['#6ED1FF', '#0F8BAA', '#023047', '#670000', '#FB8500', '#FFB703'];
                 vm.options = {
                     scales: {
                         yAxes: [{

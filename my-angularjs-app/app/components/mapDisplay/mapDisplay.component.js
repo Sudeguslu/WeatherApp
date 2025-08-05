@@ -6,16 +6,15 @@ app.component('mapDisplay', {
     controller: function () {
         var vm = this;
 
-        // Harita için temel başlangıç ayarları
         angular.extend(vm, {
-            center: { // Başlangıçta Türkiye'yi ortala
+            center: { 
                 lat: 39,
                 lng: 35,
                 zoom: 5
             },
-            markers: {}, // Başlangıçta hiç işaretçi olmasın
+            markers: {},
             defaults: {
-                scrollWheelZoom: true // Fare tekerleği ile yakınlaştırma etkin
+                scrollWheelZoom: true
             }
         });
 

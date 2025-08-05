@@ -1,12 +1,12 @@
-
-<div class="card chart-card">
-    <div class="card-body">
+<div class="card chart-card" style="margin-top: 20px;" ng-if="vm.weatherInfo" ng-cloak>
+    <div class="card-body" style="padding: 10px;">
         <h5 class="card-title">Hava Durumu Verileri Grafiği</h5>
         <canvas id="bar" class="chart chart-bar"
           chart-data="vm.data" 
           chart-labels="vm.labels" 
           chart-colors="vm.colors" 
-          chart-options="vm.options">
+          chart-options="vm.options"
+          style="height: calc(100% - 30px); width: 100%;">
         </canvas>
-    </div>
+    </div>
 </div>
